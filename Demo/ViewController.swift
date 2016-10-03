@@ -24,68 +24,68 @@ class ViewController: UIViewController {
     
     // Part of making old test button changed to tapped. This is what ActionKit tries to avoid doing
     // by removing the need to explicitly declare selector functions when a closure is all that's needed
-    func tappedSelector(sender: UIButton!) {
-        self.oldTestButton.setTitle("Old Tapped!", forState: .Normal)
+    func tappedSelector(_ sender: UIButton!) {
+        self.oldTestButton.setTitle("Old Tapped!", for: UIControlState())
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let startDate = NSDate()
+        let startDate = Date()
         //: ##Adding UIControl Events
         //:
         //: Old style of setting a target and action for the button
         oldTestButton.addTarget(self, action: #selector(ViewController.tappedSelector(_:)),
-                                forControlEvents: .TouchUpInside)
+                                for: .touchUpInside)
 
         // This is equivalent to oldTestButton's implementation of setting the action to Tapped
-        testButton.addControlEvent(.TouchUpInside) { [weak self] in
-            self?.testButton.setTitle("Tapped! @ \(Int(NSDate().timeIntervalSinceDate(startDate)))sec", forState: .Normal)
-            self?.testButton.removeControlEvent(.TouchUpInside);
+        testButton.addControlEvent(.touchUpInside) { [weak self] in
+            self?.testButton.setTitle("Tapped! @ \(Int(Date().timeIntervalSince(startDate)))sec", for: UIControlState())
+            self?.testButton.removeControlEvent(.touchUpInside);
         }
 
         //: This adds a closure to the second button on the screen to change the text to Tapped2! when being tapped
-        testButton2.addControlEvent(.TouchUpInside, closure: { [weak self] in
-            self?.testButton2.setTitle("Tapped2!", forState: .Normal)
+        testButton2.addControlEvent(.touchUpInside, closure: { [weak self] in
+            self?.testButton2.setTitle("Tapped2!", for: UIControlState())
             })
         
         // This adds a closure to the second button on the screen to change the text to Tapped2! when being tapped
-        testButton2.addControlEvent(.TouchUpInside, closure: { [weak self] in
-            self?.testButton2.setTitle("Tapped2!", forState: .Normal)
+        testButton2.addControlEvent(.touchUpInside, closure: { [weak self] in
+            self?.testButton2.setTitle("Tapped2!", for: UIControlState())
             })
 
         
         //: This adds a closure, which receives the UIControl as input parameter, to the third button.
         //: It shows how the UIControl can be mapped to the UIButton, in order to have its title changed.
-        testButton3.addControlEvent(.TouchUpInside) { (button: UIButton) in
-            button.setTitle("Tapped3!", forState: .Normal)
+        testButton3.addControlEvent(.touchUpInside) { (button: UIButton) in
+            button.setTitle("Tapped3!", for: UIControlState())
         }
 
         //: The following shows that you can remove a control event that has been set.
         //: Initially, tapping the first button on the screen would set the text to "Tapped!" ...
-        inactiveButton.addControlEvent(.TouchUpInside) { [weak self] in
-            self?.inactiveButton.setTitle("Tapped!", forState: .Normal)
+        inactiveButton.addControlEvent(.touchUpInside) { [weak self] in
+            self?.inactiveButton.setTitle("Tapped!", for: UIControlState())
         }
         
         //: ... but then the following removes that.
-        inactiveButton.removeControlEvent(.TouchUpInside);
+        inactiveButton.removeControlEvent(.touchUpInside);
 
         
         //: #Adding GestureRecognizers
         //:
         //: Add a Tap Gesture Recognizer (tgr)
         let tgr = UITapGestureRecognizer() {
-            self.view.backgroundColor = UIColor.redColor()
+            self.view.backgroundColor = UIColor.red
         }
         
         //: The following three lines will add an additional action to the red color gesture recognizer.
         //:  Multiple actions per gesture recognizer (or control events) are possible.
         tgr.addClosure() { [weak self] in
-            self?.testButton.setTitle("Gesture: tapped once!", forState: .Normal)
+            self?.testButton.setTitle("Gesture: tapped once!", for: UIControlState())
         }
         
         //: Add a Double Tap Gesture Recognizer (dtgr)
         let dtgr = UITapGestureRecognizer() { [weak self] in
-            self?.view.backgroundColor = UIColor.yellowColor()
+            self?.view.backgroundColor = UIColor.yellow
         }
         dtgr.numberOfTapsRequired = 2
         
@@ -99,10 +99,10 @@ class ViewController: UIViewController {
         //: It also shows it is not necessary to keep a reference to the gesture recognizer
         //: when you only need it inside the closure
         view.addGestureRecognizer(UILongPressGestureRecognizer() { [weak self] (gesture: UILongPressGestureRecognizer) in
-            if gesture.state == .Began {
+            if gesture.state == .began {
                 guard let strongSelf = self else { return }
-                let locInView = gesture.locationInView(strongSelf.view)
-                strongSelf.testButton2.setTitle("\(locInView)", forState: .Normal)
+                let locInView = gesture.location(in: strongSelf.view)
+                strongSelf.testButton2.setTitle("\(locInView)", for: UIControlState())
             }
         })
 		
@@ -116,7 +116,7 @@ class ViewController: UIViewController {
 			print("Item \(item) pressed")
 		}
 	
-		let systemItem = UIBarButtonItem(barButtonSystemItem: .Action) { 
+		let systemItem = UIBarButtonItem(barButtonSystemItem: .action) { 
 			print("System item pressed")
 		}
 		

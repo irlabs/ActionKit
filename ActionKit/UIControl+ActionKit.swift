@@ -12,14 +12,14 @@ import UIKit
 public protocol ActionKitControl {}
 
 public extension ActionKitControl where Self: UIControl {
-    func addControlEvent(controlEvents: UIControlEvents, closureWithControl: (Self) -> ()) {
+    func addControlEvent(_ controlEvents: UIControlEvents, closureWithControl: @escaping (Self) -> ()) {
         _addControlEvent(controlEvents, closure: { [weak self] () -> () in
             guard let strongSelf = self else { return }
             closureWithControl(strongSelf)
             })
     }
     
-    func addControlEvent(controlEvents: UIControlEvents, closure: () -> ()) {
+    func addControlEvent(_ controlEvents: UIControlEvents, closure: @escaping () -> ()) {
         _addControlEvent(controlEvents, closure: closure)
     }
 }
@@ -27,7 +27,7 @@ public extension ActionKitControl where Self: UIControl {
 extension UIControl: ActionKitControl {}
 
 public extension UIControl {
-    private struct AssociatedKeys {
+    fileprivate struct AssociatedKeys {
         static var ControlTouchDownClosure = 0
         static var ControlTouchDownRepeatClosure = 0
         static var ControlTouchDragInsideClosure = 0
@@ -49,275 +49,275 @@ public extension UIControl {
         static var ControlAllEventsClosure = 0
     }
     
-    private func get(key: UnsafePointer<Void>) -> ActionKitVoidClosure? {
+    fileprivate func get(_ key: UnsafeRawPointer) -> ActionKitVoidClosure? {
         return (objc_getAssociatedObject(self, key) as? ActionKitVoidClosureWrapper)?.closure
     }
-    private func set(key: UnsafePointer<Void>, action: ActionKitVoidClosure?) {
+    fileprivate func set(_ key: UnsafeRawPointer, action: ActionKitVoidClosure?) {
         objc_setAssociatedObject(self, key, ActionKitVoidClosureWrapper(action), objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
     }
     
-    private var TouchDownClosure: ActionKitVoidClosure? {
+    fileprivate var TouchDownClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlTouchDownClosure) }
         set { set(&AssociatedKeys.ControlTouchDownClosure, action: newValue)}
     }
-    private var TouchDownRepeatClosure: ActionKitVoidClosure? {
+    fileprivate var TouchDownRepeatClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlTouchDownRepeatClosure) }
         set { set(&AssociatedKeys.ControlTouchDownRepeatClosure, action: newValue)}
     }
-    private var TouchDragInsideClosure: ActionKitVoidClosure? {
+    fileprivate var TouchDragInsideClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlTouchDragInsideClosure) }
         set { set(&AssociatedKeys.ControlTouchDragInsideClosure, action: newValue)}
     }
-    private var TouchDragOutsideClosure: ActionKitVoidClosure? {
+    fileprivate var TouchDragOutsideClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlTouchDragOutsideClosure) }
         set { set(&AssociatedKeys.ControlTouchDragOutsideClosure, action: newValue)}
     }
-    private var TouchDragEnterClosure: ActionKitVoidClosure? {
+    fileprivate var TouchDragEnterClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlTouchDragEnterClosure) }
         set { set(&AssociatedKeys.ControlTouchDragEnterClosure, action: newValue)}
     }
-    private var TouchDragExitClosure: ActionKitVoidClosure? {
+    fileprivate var TouchDragExitClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlTouchDragExitClosure) }
         set { set(&AssociatedKeys.ControlTouchDragExitClosure, action: newValue)}
     }
-    private var TouchUpInsideClosure: ActionKitVoidClosure? {
+    fileprivate var TouchUpInsideClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlTouchUpInsideClosure) }
         set { set(&AssociatedKeys.ControlTouchUpInsideClosure, action: newValue)}
     }
-    private var TouchUpOutsideClosure: ActionKitVoidClosure? {
+    fileprivate var TouchUpOutsideClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlTouchUpOutsideClosure) }
         set { set(&AssociatedKeys.ControlTouchUpOutsideClosure, action: newValue)}
     }
-    private var TouchCancelClosure: ActionKitVoidClosure? {
+    fileprivate var TouchCancelClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlTouchCancelClosure) }
         set { set(&AssociatedKeys.ControlTouchCancelClosure, action: newValue)}
     }
-    private var ValueChangedClosure: ActionKitVoidClosure? {
+    fileprivate var ValueChangedClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlValueChangedClosure) }
         set { set(&AssociatedKeys.ControlValueChangedClosure, action: newValue)}
     }
-    private var EditingDidBeginClosure: ActionKitVoidClosure? {
+    fileprivate var EditingDidBeginClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlEditingDidBeginClosure) }
         set { set(&AssociatedKeys.ControlEditingDidBeginClosure, action: newValue)}
     }
-    private var EditingChangedClosure: ActionKitVoidClosure? {
+    fileprivate var EditingChangedClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlEditingChangedClosure) }
         set { set(&AssociatedKeys.ControlEditingChangedClosure, action: newValue)}
     }
-    private var EditingDidEndClosure: ActionKitVoidClosure? {
+    fileprivate var EditingDidEndClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlEditingDidEndClosure) }
         set { set(&AssociatedKeys.ControlEditingDidEndClosure, action: newValue)}
     }
-    private var EditingDidEndOnExitClosure: ActionKitVoidClosure? {
+    fileprivate var EditingDidEndOnExitClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlEditingDidEndOnExitClosure) }
         set { set(&AssociatedKeys.ControlEditingDidEndOnExitClosure, action: newValue)}
     }
-    private var AllTouchEventsClosure: ActionKitVoidClosure? {
+    fileprivate var AllTouchEventsClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlAllTouchEventsClosure) }
         set { set(&AssociatedKeys.ControlAllTouchEventsClosure, action: newValue)}
     }
-    private var AllEditingEventsClosure: ActionKitVoidClosure? {
+    fileprivate var AllEditingEventsClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlAllEditingEventsClosure) }
         set { set(&AssociatedKeys.ControlAllEditingEventsClosure, action: newValue)}
     }
-    private var ApplicationReservedClosure: ActionKitVoidClosure? {
+    fileprivate var ApplicationReservedClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlApplicationReservedClosure) }
         set { set(&AssociatedKeys.ControlApplicationReservedClosure, action: newValue)}
     }
-    private var SystemReservedClosure: ActionKitVoidClosure? {
+    fileprivate var SystemReservedClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlSystemReservedClosure) }
         set { set(&AssociatedKeys.ControlSystemReservedClosure, action: newValue)}
     }
-    private var AllEventsClosure: ActionKitVoidClosure? {
+    fileprivate var AllEventsClosure: ActionKitVoidClosure? {
         get { return get(&AssociatedKeys.ControlAllEventsClosure) }
         set { set(&AssociatedKeys.ControlAllEventsClosure, action: newValue)}
     }
     
-    @objc private func runClosureTouchDown() {
+    @objc fileprivate func runClosureTouchDown() {
         TouchDownClosure?()
     }
-    @objc private func runClosureTouchDownRepeat() {
+    @objc fileprivate func runClosureTouchDownRepeat() {
         TouchDownRepeatClosure?()
     }
-    @objc private func runClosureTouchDragInside() {
+    @objc fileprivate func runClosureTouchDragInside() {
         TouchDragInsideClosure?()
     }
-    @objc private func runClosureTouchDragOutside() {
+    @objc fileprivate func runClosureTouchDragOutside() {
         TouchDragOutsideClosure?()
     }
-    @objc private func runClosureTouchDragEnter() {
+    @objc fileprivate func runClosureTouchDragEnter() {
         TouchDragEnterClosure?()
     }
-    @objc private func runClosureTouchDragExit() {
+    @objc fileprivate func runClosureTouchDragExit() {
         TouchDragExitClosure?()
     }
-    @objc private func runClosureTouchUpInside() {
+    @objc fileprivate func runClosureTouchUpInside() {
         TouchUpInsideClosure?()
     }
-    @objc private func runClosureTouchUpOutside() {
+    @objc fileprivate func runClosureTouchUpOutside() {
         TouchUpOutsideClosure?()
     }
-    @objc private func runClosureTouchCancel() {
+    @objc fileprivate func runClosureTouchCancel() {
         TouchCancelClosure?()
     }
-    @objc private func runClosureValueChanged() {
+    @objc fileprivate func runClosureValueChanged() {
         ValueChangedClosure?()
     }
-    @objc private func runClosureEditingDidBegin() {
+    @objc fileprivate func runClosureEditingDidBegin() {
         EditingDidBeginClosure?()
     }
-    @objc private func runClosureEditingChanged() {
+    @objc fileprivate func runClosureEditingChanged() {
         EditingChangedClosure?()
     }
-    @objc private func runClosureEditingDidEnd() {
+    @objc fileprivate func runClosureEditingDidEnd() {
         EditingDidEndClosure?()
     }
-    @objc private func runClosureEditingDidEndOnExit() {
+    @objc fileprivate func runClosureEditingDidEndOnExit() {
         EditingDidEndOnExitClosure?()
     }
-    @objc private func runClosureAllTouchEvents() {
+    @objc fileprivate func runClosureAllTouchEvents() {
         AllTouchEventsClosure?()
     }
-    @objc private func runClosureAllEditingEvents() {
+    @objc fileprivate func runClosureAllEditingEvents() {
         AllEditingEventsClosure?()
     }
-    @objc private func runClosureApplicationReserved() {
+    @objc fileprivate func runClosureApplicationReserved() {
         ApplicationReservedClosure?()
     }
-    @objc private func runClosureSystemReserved() {
+    @objc fileprivate func runClosureSystemReserved() {
         SystemReservedClosure?()
     }
-    @objc private func runClosureAllEvents() {
+    @objc fileprivate func runClosureAllEvents() {
         AllEventsClosure?()
     }
     
-    private func _addControlEvent(controlEvents: UIControlEvents, closure: ActionKitVoidClosure) {
+    fileprivate func _addControlEvent(_ controlEvents: UIControlEvents, closure: @escaping ActionKitVoidClosure) {
         switch controlEvents {
-        case let x where x.contains(.TouchDown):
+        case let x where x.contains(.touchDown):
             self.TouchDownClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureTouchDown), forControlEvents: controlEvents)
-        case let x where x.contains(.TouchDownRepeat):
+            self.addTarget(self, action: #selector(UIControl.runClosureTouchDown), for: controlEvents)
+        case let x where x.contains(.touchDownRepeat):
             self.TouchDownRepeatClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureTouchDownRepeat), forControlEvents: controlEvents)
-        case let x where x.contains(.TouchDragInside):
+            self.addTarget(self, action: #selector(UIControl.runClosureTouchDownRepeat), for: controlEvents)
+        case let x where x.contains(.touchDragInside):
             self.TouchDragInsideClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureTouchDragInside), forControlEvents: controlEvents)
-        case let x where x.contains(.TouchDragOutside):
+            self.addTarget(self, action: #selector(UIControl.runClosureTouchDragInside), for: controlEvents)
+        case let x where x.contains(.touchDragOutside):
             self.TouchDragOutsideClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureTouchDragOutside), forControlEvents: controlEvents)
-        case let x where x.contains(.TouchDragEnter):
+            self.addTarget(self, action: #selector(UIControl.runClosureTouchDragOutside), for: controlEvents)
+        case let x where x.contains(.touchDragEnter):
             self.TouchDragEnterClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureTouchDragEnter), forControlEvents: controlEvents)
-        case let x where x.contains(.TouchDragExit):
+            self.addTarget(self, action: #selector(UIControl.runClosureTouchDragEnter), for: controlEvents)
+        case let x where x.contains(.touchDragExit):
             self.TouchDragExitClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureTouchDragExit), forControlEvents: controlEvents)
-        case let x where x.contains(.TouchUpInside):
+            self.addTarget(self, action: #selector(UIControl.runClosureTouchDragExit), for: controlEvents)
+        case let x where x.contains(.touchUpInside):
             self.TouchUpInsideClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureTouchUpInside), forControlEvents: controlEvents)
-        case let x where x.contains(.TouchUpOutside):
+            self.addTarget(self, action: #selector(UIControl.runClosureTouchUpInside), for: controlEvents)
+        case let x where x.contains(.touchUpOutside):
             self.TouchUpOutsideClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureTouchUpOutside), forControlEvents: controlEvents)
-        case let x where x.contains(.TouchCancel):
+            self.addTarget(self, action: #selector(UIControl.runClosureTouchUpOutside), for: controlEvents)
+        case let x where x.contains(.touchCancel):
             self.TouchCancelClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureTouchCancel), forControlEvents: controlEvents)
-        case let x where x.contains(.ValueChanged):
+            self.addTarget(self, action: #selector(UIControl.runClosureTouchCancel), for: controlEvents)
+        case let x where x.contains(.valueChanged):
             self.ValueChangedClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureValueChanged), forControlEvents: controlEvents)
-        case let x where x.contains(.EditingDidBegin):
+            self.addTarget(self, action: #selector(UIControl.runClosureValueChanged), for: controlEvents)
+        case let x where x.contains(.editingDidBegin):
             self.EditingDidBeginClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureEditingDidBegin), forControlEvents: controlEvents)
-        case let x where x.contains(.EditingChanged):
+            self.addTarget(self, action: #selector(UIControl.runClosureEditingDidBegin), for: controlEvents)
+        case let x where x.contains(.editingChanged):
             self.EditingChangedClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureEditingChanged), forControlEvents: controlEvents)
-        case let x where x.contains(.EditingDidEnd):
+            self.addTarget(self, action: #selector(UIControl.runClosureEditingChanged), for: controlEvents)
+        case let x where x.contains(.editingDidEnd):
             self.EditingDidEndClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureEditingDidEnd), forControlEvents: controlEvents)
-        case let x where x.contains(.EditingDidEndOnExit):
+            self.addTarget(self, action: #selector(UIControl.runClosureEditingDidEnd), for: controlEvents)
+        case let x where x.contains(.editingDidEndOnExit):
             self.EditingDidEndOnExitClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureEditingDidEndOnExit), forControlEvents: controlEvents)
-        case let x where x.contains(.AllTouchEvents):
+            self.addTarget(self, action: #selector(UIControl.runClosureEditingDidEndOnExit), for: controlEvents)
+        case let x where x.contains(.allTouchEvents):
             self.AllTouchEventsClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureAllTouchEvents), forControlEvents: controlEvents)
-        case let x where x.contains(.AllEditingEvents):
+            self.addTarget(self, action: #selector(UIControl.runClosureAllTouchEvents), for: controlEvents)
+        case let x where x.contains(.allEditingEvents):
             self.AllEditingEventsClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureAllEditingEvents), forControlEvents: controlEvents)
-        case let x where x.contains(.ApplicationReserved):
+            self.addTarget(self, action: #selector(UIControl.runClosureAllEditingEvents), for: controlEvents)
+        case let x where x.contains(.applicationReserved):
             self.ApplicationReservedClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureApplicationReserved), forControlEvents: controlEvents)
-        case let x where x.contains(.SystemReserved):
+            self.addTarget(self, action: #selector(UIControl.runClosureApplicationReserved), for: controlEvents)
+        case let x where x.contains(.systemReserved):
             self.SystemReservedClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureSystemReserved), forControlEvents: controlEvents)
-        case let x where x.contains(.AllEvents):
+            self.addTarget(self, action: #selector(UIControl.runClosureSystemReserved), for: controlEvents)
+        case let x where x.contains(.allEvents):
             self.AllEventsClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureAllEvents), forControlEvents: controlEvents)
+            self.addTarget(self, action: #selector(UIControl.runClosureAllEvents), for: controlEvents)
         default:
             self.TouchUpInsideClosure = closure
-            self.addTarget(self, action: #selector(UIControl.runClosureTouchUpInside), forControlEvents: controlEvents)
+            self.addTarget(self, action: #selector(UIControl.runClosureTouchUpInside), for: controlEvents)
         }
     }
     
-    func removeControlEvent(controlEvents: UIControlEvents) {
+    func removeControlEvent(_ controlEvents: UIControlEvents) {
         switch controlEvents {
-        case let x where x.contains(.TouchDown):
+        case let x where x.contains(.touchDown):
             self.TouchDownClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureTouchDown), forControlEvents: controlEvents)
-        case let x where x.contains(.TouchDownRepeat):
+            self.removeTarget(self, action: #selector(UIControl.runClosureTouchDown), for: controlEvents)
+        case let x where x.contains(.touchDownRepeat):
             self.TouchDownRepeatClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureTouchDownRepeat), forControlEvents: controlEvents)
-        case let x where x.contains(.TouchDragInside):
+            self.removeTarget(self, action: #selector(UIControl.runClosureTouchDownRepeat), for: controlEvents)
+        case let x where x.contains(.touchDragInside):
             self.TouchDragInsideClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureTouchDragInside), forControlEvents: controlEvents)
-        case let x where x.contains(.TouchDragOutside):
+            self.removeTarget(self, action: #selector(UIControl.runClosureTouchDragInside), for: controlEvents)
+        case let x where x.contains(.touchDragOutside):
             self.TouchDragOutsideClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureTouchDragOutside), forControlEvents: controlEvents)
-        case let x where x.contains(.TouchDragEnter):
+            self.removeTarget(self, action: #selector(UIControl.runClosureTouchDragOutside), for: controlEvents)
+        case let x where x.contains(.touchDragEnter):
             self.TouchDragEnterClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureTouchDragEnter), forControlEvents: controlEvents)
-        case let x where x.contains(.TouchDragExit):
+            self.removeTarget(self, action: #selector(UIControl.runClosureTouchDragEnter), for: controlEvents)
+        case let x where x.contains(.touchDragExit):
             self.TouchDragExitClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureTouchDragExit), forControlEvents: controlEvents)
-        case let x where x.contains(.TouchUpInside):
+            self.removeTarget(self, action: #selector(UIControl.runClosureTouchDragExit), for: controlEvents)
+        case let x where x.contains(.touchUpInside):
             self.TouchUpInsideClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureTouchUpInside), forControlEvents: controlEvents)
-        case let x where x.contains(.TouchUpOutside):
+            self.removeTarget(self, action: #selector(UIControl.runClosureTouchUpInside), for: controlEvents)
+        case let x where x.contains(.touchUpOutside):
             self.TouchUpOutsideClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureTouchUpOutside), forControlEvents: controlEvents)
-        case let x where x.contains(.TouchCancel):
+            self.removeTarget(self, action: #selector(UIControl.runClosureTouchUpOutside), for: controlEvents)
+        case let x where x.contains(.touchCancel):
             self.TouchCancelClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureTouchCancel), forControlEvents: controlEvents)
-        case let x where x.contains(.ValueChanged):
+            self.removeTarget(self, action: #selector(UIControl.runClosureTouchCancel), for: controlEvents)
+        case let x where x.contains(.valueChanged):
             self.ValueChangedClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureValueChanged), forControlEvents: controlEvents)
-        case let x where x.contains(.EditingDidBegin):
+            self.removeTarget(self, action: #selector(UIControl.runClosureValueChanged), for: controlEvents)
+        case let x where x.contains(.editingDidBegin):
             self.EditingDidBeginClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureEditingDidBegin), forControlEvents: controlEvents)
-        case let x where x.contains(.EditingChanged):
+            self.removeTarget(self, action: #selector(UIControl.runClosureEditingDidBegin), for: controlEvents)
+        case let x where x.contains(.editingChanged):
             self.EditingChangedClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureEditingChanged), forControlEvents: controlEvents)
-        case let x where x.contains(.EditingDidEnd):
+            self.removeTarget(self, action: #selector(UIControl.runClosureEditingChanged), for: controlEvents)
+        case let x where x.contains(.editingDidEnd):
             self.EditingDidEndClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureEditingDidEnd), forControlEvents: controlEvents)
-        case let x where x.contains(.EditingDidEndOnExit):
+            self.removeTarget(self, action: #selector(UIControl.runClosureEditingDidEnd), for: controlEvents)
+        case let x where x.contains(.editingDidEndOnExit):
             self.EditingDidEndOnExitClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureEditingDidEndOnExit), forControlEvents: controlEvents)
-        case let x where x.contains(.AllTouchEvents):
+            self.removeTarget(self, action: #selector(UIControl.runClosureEditingDidEndOnExit), for: controlEvents)
+        case let x where x.contains(.allTouchEvents):
             self.AllTouchEventsClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureAllTouchEvents), forControlEvents: controlEvents)
-        case let x where x.contains(.AllEditingEvents):
+            self.removeTarget(self, action: #selector(UIControl.runClosureAllTouchEvents), for: controlEvents)
+        case let x where x.contains(.allEditingEvents):
             self.AllEditingEventsClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureAllEditingEvents), forControlEvents: controlEvents)
-        case let x where x.contains(.ApplicationReserved):
+            self.removeTarget(self, action: #selector(UIControl.runClosureAllEditingEvents), for: controlEvents)
+        case let x where x.contains(.applicationReserved):
             self.ApplicationReservedClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureApplicationReserved), forControlEvents: controlEvents)
-        case let x where x.contains(.SystemReserved):
+            self.removeTarget(self, action: #selector(UIControl.runClosureApplicationReserved), for: controlEvents)
+        case let x where x.contains(.systemReserved):
             self.SystemReservedClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureSystemReserved), forControlEvents: controlEvents)
-        case let x where x.contains(.AllEvents):
+            self.removeTarget(self, action: #selector(UIControl.runClosureSystemReserved), for: controlEvents)
+        case let x where x.contains(.allEvents):
             self.AllEventsClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureAllEvents), forControlEvents: controlEvents)
+            self.removeTarget(self, action: #selector(UIControl.runClosureAllEvents), for: controlEvents)
         default:
             self.TouchUpInsideClosure = nil
-            self.removeTarget(self, action: #selector(UIControl.runClosureTouchUpInside), forControlEvents: controlEvents)
+            self.removeTarget(self, action: #selector(UIControl.runClosureTouchUpInside), for: controlEvents)
         }
     }
 }

@@ -18,7 +18,7 @@ private extension Selector {
 */
 public extension UIBarButtonItem {
     // wraps an item specific closure in an ActionKitVoidClosure with a weak reference to self
-    private func wrapItemClosure(actionClosure: UIBarButtonItem -> Void) -> ActionKitVoidClosure {
+    fileprivate func wrapItemClosure(_ actionClosure: @escaping (UIBarButtonItem) -> Void) -> ActionKitVoidClosure {
         return { [weak self] () -> () in
             guard let strongSelf = self else { return }
             actionClosure(strongSelf)
@@ -34,7 +34,7 @@ public extension UIBarButtonItem {
 	- parameter actionClosure: The closure to be called when the button is tapped
 	- returns: Newly initialized item with the specified properties.
 	*/
-	convenience init(image: UIImage, landscapeImagePhone: UIImage? = nil, style: UIBarButtonItemStyle = .Plain, actionClosure: () -> Void) {
+	convenience init(image: UIImage, landscapeImagePhone: UIImage? = nil, style: UIBarButtonItemStyle = .plain, actionClosure: @escaping () -> Void) {
 		
 		self.init(image: image,
 		          landscapeImagePhone: landscapeImagePhone,
@@ -52,7 +52,7 @@ public extension UIBarButtonItem {
 	- parameter actionClosure: The closure to be called when the button is tapped
 	- returns: Newly initialized item with the specified properties.
 	*/
-	convenience init(title: String, style: UIBarButtonItemStyle = .Plain, actionClosure: () -> Void) {
+	convenience init(title: String, style: UIBarButtonItemStyle = .plain, actionClosure: @escaping () -> Void) {
 		self.init(title: title,
 		          style: style,
 		          target: nil,
@@ -68,7 +68,7 @@ public extension UIBarButtonItem {
 	- parameter actionClosure: The closure to be called when the button is tapped
 	- returns: Newly initialized item with the specified properties.
 	*/
-	convenience init(barButtonSystemItem systemItem: UIBarButtonSystemItem, actionClosure: () -> Void) {
+	convenience init(barButtonSystemItem systemItem: UIBarButtonSystemItem, actionClosure: @escaping () -> Void) {
 		self.init(barButtonSystemItem: systemItem,
 		          target: nil,
 		          action: nil)
@@ -86,7 +86,7 @@ public extension UIBarButtonItem {
 	- parameter actionClosure: The closure to be called when the button is tapped
 	- returns: Newly initialized item with the specified properties.
 	*/
-	convenience init(image: UIImage, landscapeImagePhone: UIImage? = nil, style: UIBarButtonItemStyle = .Plain, closureWithItem: UIBarButtonItem -> Void) {
+	convenience init(image: UIImage, landscapeImagePhone: UIImage? = nil, style: UIBarButtonItemStyle = .plain, closureWithItem: @escaping (UIBarButtonItem) -> Void) {
 		
 		self.init(image: image,
 		          landscapeImagePhone: landscapeImagePhone,
@@ -105,7 +105,7 @@ public extension UIBarButtonItem {
 	- parameter actionClosure: The closure to be called when the button is tapped
 	- returns: Newly initialized item with the specified properties.
 	*/
-	convenience init(title: String, style: UIBarButtonItemStyle = .Plain, closureWithItem: UIBarButtonItem -> Void) {
+	convenience init(title: String, style: UIBarButtonItemStyle = .plain, closureWithItem: @escaping (UIBarButtonItem) -> Void) {
 		self.init(title: title,
 		          style: style,
 		          target: nil,
@@ -121,7 +121,7 @@ public extension UIBarButtonItem {
 	- parameter actionClosure: The closure to be called when the button is tapped
 	- returns: Newly initialized item with the specified properties.
 	*/
-	convenience init(barButtonSystemItem systemItem: UIBarButtonSystemItem, closureWithItem: UIBarButtonItem -> Void) {
+	convenience init(barButtonSystemItem systemItem: UIBarButtonSystemItem, closureWithItem: @escaping (UIBarButtonItem) -> Void) {
 		self.init(barButtonSystemItem: systemItem,
 		          target: nil,
 		          action: nil)
@@ -129,16 +129,16 @@ public extension UIBarButtonItem {
 		addActionClosure(wrapItemClosure(closureWithItem))
 	}
 	
-    private struct AssociatedKeys {
+    fileprivate struct AssociatedKeys {
         static var ActionClosure = 0
     }
     
-    private var ActionClosure: ActionKitVoidClosure? {
+    fileprivate var ActionClosure: ActionKitVoidClosure? {
         get { return (objc_getAssociatedObject(self, &AssociatedKeys.ActionClosure) as? ActionKitVoidClosureWrapper)?.closure }
         set { objc_setAssociatedObject(self, &AssociatedKeys.ActionClosure, ActionKitVoidClosureWrapper(newValue), objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)}
     }
     
-    @objc private func runActionKitVoidClosure() {
+    @objc fileprivate func runActionKitVoidClosure() {
         ActionClosure?()
     }
     
@@ -146,7 +146,7 @@ public extension UIBarButtonItem {
 	Set a new closure to be called when the button is tapped.
 	**NOTE**: The old closure will be removed and not called anymore
 	*/
-	private func addActionClosure(actionClosure: ActionKitVoidClosure) {
+	fileprivate func addActionClosure(_ actionClosure: @escaping ActionKitVoidClosure) {
         ActionClosure = actionClosure
         self.target = self
         self.action = .runBarButtonItem

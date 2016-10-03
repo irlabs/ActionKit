@@ -12,24 +12,24 @@ import UIKit
 public protocol ActionKitGestureRecognizer {}
 
 public extension ActionKitGestureRecognizer where Self: UIGestureRecognizer {
-    init(closure: () -> ()) {
+    init(closure: @escaping () -> ()) {
         self.init()
         _addControlEvent(closure: closure)
     }
     
-    init(closureWithControl: (Self) -> ()) {
+    init(closureWithControl: @escaping (Self) -> ()) {
         self.init()
         addClosure(closureWithControl)
     }
     
-    func addClosure(closureWithControl: (Self) -> ()) {
+    func addClosure(_ closureWithControl: @escaping (Self) -> ()) {
         _addControlEvent(closure: { [weak self] (UIControl) -> () in
             guard let strongSelf = self else { return }
             closureWithControl(strongSelf)
             })
     }
     
-    func addClosure(closure: () -> ()) {
+    func addClosure(_ closure: @escaping () -> ()) {
         _addControlEvent(closure: closure)
     }
 }
@@ -37,20 +37,20 @@ public extension ActionKitGestureRecognizer where Self: UIGestureRecognizer {
 extension UIGestureRecognizer: ActionKitGestureRecognizer {}
 
 public extension UIGestureRecognizer {
-    private struct AssociatedKeys {
+    fileprivate struct AssociatedKeys {
         static var ActionClosure = 0
     }
     
-    private var ActionClosure: ActionKitVoidClosure? {
+    fileprivate var ActionClosure: ActionKitVoidClosure? {
         get { return (objc_getAssociatedObject(self, &AssociatedKeys.ActionClosure) as? ActionKitVoidClosureWrapper)?.closure }
         set { objc_setAssociatedObject(self, &AssociatedKeys.ActionClosure, ActionKitVoidClosureWrapper(newValue), objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)}
     }
     
-    @objc private func runActionKitVoidClosure() {
+    @objc fileprivate func runActionKitVoidClosure() {
         ActionClosure?()
     }
     
-    private func _addControlEvent(closure closure: () -> ()) {
+    fileprivate func _addControlEvent(closure: @escaping () -> ()) {
         ActionClosure = closure
         self.addTarget(self, action: #selector(UIGestureRecognizer.runActionKitVoidClosure))
     }
